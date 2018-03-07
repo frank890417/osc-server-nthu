@@ -1,13 +1,40 @@
 'use strict';
 var osc = require('../lib');
 
-var client = new osc.Client('127.0.0.1', 3333);
-client.send('/oscAddress', 1, 1, 2, 3, 5, 8, function (err) {
-  if (err) {
-    console.error(new Error(err));
-  }
-  client.kill();
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+var client = new osc.Client('127.0.0.1', 12345);
+app.get('/', function(req, res){
+res.sendFile(__dirname + '/index.html');
 });
+
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+   socket.on('switchmode',function(num){
+        console.log("get switchmode :"+num);
+        sendMode(num)
+    });
+});
+
+
+function sendMode(num){
+    client.send('/mode/switch', num)
+}
+//client.send('/mode/switch', 2, function (err) {
+//  if (err) {
+//    console.error(new Error(err));
+//  }
+//  client.kill();
+//});
 
 // or
 // var msg =  new osc.Message('/address')

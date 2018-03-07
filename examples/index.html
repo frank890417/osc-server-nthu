@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style> button{padding; 10px 50px;display: block;} </style>
+  </head>
+  <body>
+     <div id = "app">
+        <h1> OSC Server Test</h1>
+        <hr>
+        <button v-for="mode in modes" @click="switchMode(mode.value)"> {{mode.label}} </button>
+        
+     </div>
+  </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>         
+    <script>
+  var socket = io();
+    function switchMode(num){
+        socket.emit('switchmode',num)
+    }
+    var modes = [ 
+       { label: "sin", value: 1},
+       { label: "rainbow", value: 2},
+       { label: "radar", value: 3},
+       { label: "grid", value: 4},
+       { label: "video", value: 7} 
+    
+    ]
+var vm = new Vue({
+    el: "#app",
+    data: {
+        modes: modes
+    },
+    methods: {
+       switchMode(num){
+          window.switchMode(num)
+       }
+    }
+})
+    </script>
+
+</html>
